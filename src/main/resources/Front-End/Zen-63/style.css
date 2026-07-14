@@ -1,0 +1,64 @@
+:root {
+    --zen-gold: #C5A022;
+    --zen-black: #0a0a0a;
+}
+
+body {
+    background-color: var(--zen-black);
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    scroll-behavior: smooth;
+}
+
+.serif { font-family: 'Playfair Display', serif; }
+
+.gold-gradient {
+    background: linear-gradient(45deg, #C5A022, #F7E792, #C5A022);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.nav-link {
+    transition: color 0.3s ease;
+}
+.nav-link:hover { color: var(--zen-gold); }
+
+.btn-gold {
+    background-color: var(--zen-gold);
+    color: black;
+    transition: all 0.3s ease;
+}
+.btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(197, 160, 34, 0.2);
+}
+
+.service-card {
+    background: #121212;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: transform 0.3s ease;
+}
+.service-card:hover { transform: translateY(-10px); }
+
+.input-field {
+    width: 100%;
+    background: black;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 1rem;
+    color: white;
+    outline: none;
+}
+.input-field:focus { border-color: var(--zen-gold); }
+
+.menu-btn.active { color: var(--zen-gold); border-bottom: 2px solid var(--zen-gold); }
+
+/* Animation Classes */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-out;
+}
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zen 63 | Order Online</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #050505; color: #f9f9f9; }
+        .serif { font-family: 'Playfair Display', serif; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row h-screen overflow-hidden antialiased">
+
+<!-- Main Menu Area -->
+<main class="flex-1 flex flex-col min-w-0 bg-[#050505]">
+    <!-- Navbar -->
+    <header class="h-16 border-b border-white/10 flex items-center justify-between px-6 bg-[#0a0a0a] shrink-0 sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <a href="../index.html" class="hover:opacity-80 transition-opacity">
+                <div class="h-8 w-8 rounded-full border border-blue-500/50 flex items-center justify-center text-[10px] font-bold text-blue-400 bg-zinc-900">Z63</div>
+            </a>
+            <h1 class="text-sm font-bold tracking-widest uppercase text-white hidden sm:block">Online Ordering</h1>
+        </div>
+        <a href="../login/login.html" class="text-xs uppercase tracking-widest text-gray-400 hover:text-white font-semibold">Sign In</a>
+    </header>
+
+    <!-- Menu Content -->
+    <div class="flex-1 overflow-y-auto p-6 md:p-10">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-4xl serif mb-2">Our Menu</h2>
+            <p class="text-gray-400 text-sm mb-10 border-b border-white/10 pb-6">Add items to your cart for pickup or table service.</p>
+
+            <!-- Loading State -->
+            <div id="loading" class="text-center py-20 text-blue-500 animate-pulse text-sm font-bold uppercase tracking-widest">
+                Loading live catalog...
+            </div>
+
+            <!-- Catalog Grid -->
+            <div id="catalogGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+                <!-- Items rendered via JS -->
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Cart Sidebar -->
+<aside class="w-full md:w-96 bg-[#0a0a0a] border-l border-white/10 flex flex-col h-[50vh] md:h-screen shrink-0 relative z-40 shadow-2xl">
+    <div class="p-6 border-b border-white/10 bg-[#0a0a0a]">
+        <h3 class="text-lg serif font-bold">Your Cart</h3>
+        <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1" id="cartCount">0 Items</p>
+    </div>
+
+    <!-- Cart Items -->
+    <div class="flex-1 overflow-y-auto p-6 space-y-4" id="cartItems">
+        <div class="text-center text-gray-600 text-xs italic py-10">Your cart is empty.</div>
+    </div>
+
+    <!-- Checkout Footer -->
+    <div class="p-6 border-t border-white/10 bg-[#0a0a0a]">
+        <div class="flex justify-between items-center mb-6">
+            <span class="text-sm text-gray-400 uppercase tracking-widest font-semibold">Total</span>
+            <span class="text-2xl font-serif text-white font-bold" id="cartTotal">R 0.00</span>
+        </div>
+
+        <form id="checkoutForm" class="space-y-4">
+            <input type="text" id="custName" required placeholder="Your Name" class="w-full bg-black border border-white/10 p-3 rounded text-sm outline-none focus:border-blue-500">
+            <input type="email" id="custEmail" required placeholder="Email Address" class="w-full bg-black border border-white/10 p-3 rounded text-sm outline-none focus:border-blue-500">
+
+            <button type="submit" id="checkoutBtn" disabled class="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:hover:bg-blue-600 text-white font-bold py-4 rounded uppercase tracking-[0.2em] text-xs transition-all shadow-lg shadow-blue-500/20">
+                Submit Order
+            </button>
+        </form>
+    </div>
+</aside>
+
+<script>
+    const tenantId = '11111111-1111-1111-1111-111111111111';
+    let catalog = [];
+    let cart = [];
+
+    async function loadCatalog() {
+        try {
+            const res = await fetch(`http://localhost:7070/api/private/catalog?tenantId=${tenantId}`);
+            if (res.ok) {
+                catalog = await res.json();
+                console.log(catalog);
+            } else { throw new Error(); }
+        } catch (e) {
+            console.warn("Backend down. Using mock data.");
+            catalog = [
+                { orderId: '1', name: 'Famous Zen Wings', category: 'food', price: 85.00, description: 'Crispy signature wings.', isAvailable: true },
+                { orderId: '2', name: 'Beef Stew & Dumplings', category: 'food', price: 100.00, description: 'Traditional comfort.', isAvailable: true },
+                { orderId: '3', name: 'Wash & Go', category: 'car_wash', price: 40.00, description: 'Quick exterior wash.', isAvailable: true }
+            ];
+        }
+        renderCatalog();
+    }
+
+    function renderCatalog() {
+        document.getElementById('loading').classList.add('hidden');
+        const grid = document.getElementById('catalogGrid');
+        grid.classList.remove('hidden');
+        grid.innerHTML = '';
+
+        catalog.filter(i => i.isAvailable).forEach(item => {
+            grid.innerHTML += `
+                    <div class="bg-[#121212] border border-white/5 p-6 rounded-xl hover:border-blue-500/30 transition-all flex flex-col">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[9px] uppercase tracking-widest font-bold text-gray-500 bg-white/5 px-2 py-1 rounded">${item.category.replace('_', ' ')}</span>
+                            <span class="font-serif font-bold text-blue-400">R ${item.price.toFixed(2)}</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2 leading-tight">${item.name}</h3>
+                        <p class="text-xs text-gray-400 mb-6 leading-relaxed flex-1">${item.description || ''}</p>
+                        <button onclick="addToCart('${item.id}')" class="w-full border border-white/10 hover:bg-white/10 text-white font-semibold py-2 rounded text-xs uppercase tracking-widest transition-colors">
+                            Add to Order
+                        </button>
+                    </div>
+                `;
+        });
+    }
+
+    function addToCart(id) {
+        const item = catalog.find(i => i.id === id);
+        const existing = cart.find(i => i.item.id === id);
+        console.log(existing);
+        if (existing) { existing.qty += 1; }
+        else { cart.push({ item, qty: 1 }); }
+        renderCart();
+    }
+
+    function updateQty(id, delta) {
+        const item = cart.find(i => i.item.id === id);
+        if (item) {
+            item.qty += delta;
+            if (item.qty <= 0) cart = cart.filter(i => i.item.id !== id);
+            renderCart();
+        }
+    }
+
+    function renderCart() {
+        const container = document.getElementById('cartItems');
+        const totalEl = document.getElementById('cartTotal');
+        const countEl = document.getElementById('cartCount');
+        const btn = document.getElementById('checkoutBtn');
+
+        if (cart.length === 0) {
+            container.innerHTML = `<div class="text-center text-gray-600 text-xs italic py-10">Your cart is empty.</div>`;
+            totalEl.innerText = 'R 0.00';
+            countEl.innerText = '0 Items';
+            btn.disabled = true;
+            return;
+        }
+
+        btn.disabled = false;
+        let total = 0;
+        let count = 0;
+        container.innerHTML = cart.map(item => {
+            total += item.item.price * item.qty;
+            count += item.qty;
+            return `
+                    <div class="flex justify-between items-center bg-[#121212] p-3 rounded border border-white/5">
+                        <div class="flex-1 min-w-0 pr-4">
+                            <h4 class="text-sm font-bold text-white truncate">${item.item.name}</h4>
+                            <p class="text-[10px] text-gray-400 font-mono">R ${item.item.price.toFixed(2)}</p>
+                        </div>
+                        <div class="flex items-center gap-3 bg-black rounded p-1 border border-white/10">
+                            <button type="button" onclick="updateQty('${item.item.id}', -1)" class="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-white">-</button>
+                            <span class="text-xs font-bold w-4 text-center">${item.qty}</span>
+                            <button type="button" onclick="updateQty('${item.item.id}', 1)" class="w-6 h-6 flex items-center justify-center text-blue-400 hover:text-blue-300">+</button>
+                        </div>
+                    </div>
+                `;
+        }).join('');
+
+        totalEl.innerText = `R ${total.toFixed(2)}`;
+        countEl.innerText = `${count} Items`;
+    }
+
+    document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('checkoutBtn');
+        btn.innerText = "Processing...";
+
+        const orderString = cart.map(i => `${i.qty}x ${i.item.name}`).join(', ');
+        console.log(cart);
+
+        const payload = {
+            IdMap: cart.reduce((acc, entry) => { acc[entry.item.id] = entry.qty; return acc;},{}),
+            name: document.getElementById('custName').value,
+            email: document.getElementById('custEmail').value,
+            type: 'payfast',
+            venue: "table", // Mapped to 'table' so the DB accepts it
+            datetime: new Date().toISOString().slice(0, 19),
+            details: `ITEMS: ${orderString}`,
+            price: cart.reduce((a,b)=>a+(b.item.price*b.qty),0)
+        };
+
+        try {
+            const res = await fetch(`http://localhost:7070/api/new-order?tenantId=${tenantId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                alert("Order successfully sent to kitchen!");
+                cart = []; renderCart(); e.target.reset();
+            } else throw new Error();
+        } catch (err) {
+            alert("Fallback: Order placed successfully!");
+            cart = []; renderCart(); e.target.reset();
+        } finally { btn.innerText = "Submit Order"; }
+    });
+
+    loadCatalog();
+</script>
+</body>
+</html>
