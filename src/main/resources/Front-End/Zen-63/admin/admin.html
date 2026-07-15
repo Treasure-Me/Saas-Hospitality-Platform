@@ -40,11 +40,20 @@
 </head>
 <body class="flex h-screen overflow-hidden">
 
-<!-- Sidebar -->
-<aside class="w-64 bg-[#0a0a0a] border-r border-white/10 flex-col hidden md:flex shrink-0">
-    <div class="p-6 border-b border-white/10 flex items-center gap-3">
-        <div class="w-8 h-8 rounded-full border border-blue-500/50 flex items-center justify-center text-xs font-bold text-blue-400 shadow-[0_0_10px_rgba(0,132,255,0.2)]">Z63</div>
-        <span class="text-xl font-bold tracking-tighter uppercase serif">Admin</span>
+<!-- Mobile Overlay -->
+<div id="sidebarOverlay" class="fixed inset-0 bg-black/80 z-[90] hidden md:hidden backdrop-blur-sm transition-opacity" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar (Drawer on mobile, Static on desktop) -->
+<aside id="sidebar" class="fixed inset-y-0 left-0 z-[100] w-64 bg-[#0a0a0a] border-r border-white/10 flex flex-col transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 shrink-0 shadow-2xl md:shadow-none">
+    <div class="p-6 border-b border-white/10 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full border border-blue-500/50 flex items-center justify-center text-xs font-bold text-blue-400 shadow-[0_0_10px_rgba(0,132,255,0.2)]">Z63</div>
+            <span class="text-xl font-bold tracking-tighter uppercase serif">Admin</span>
+        </div>
+        <!-- Close button for mobile -->
+        <button onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white p-1">
+            <span class="material-symbols-outlined">close</span>
+        </button>
     </div>
 
     <nav class="flex-1 overflow-y-auto py-6">
@@ -82,14 +91,14 @@
         </ul>
     </nav>
 
-    <div class="p-4 border-t border-white/10">
+    <div class="p-4 border-t border-white/10 shrink-0">
         <div class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-white/5 rounded-md transition-colors">
-            <div class="w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center">
+            <div class="w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center shrink-0">
                 <span class="material-symbols-outlined text-sm text-amber-400">shield_person</span>
             </div>
-            <div>
-                <p class="text-xs font-semibold text-white">System Admin</p>
-                <p class="text-[10px] text-gray-500">Tenant: Zen 63</p>
+            <div class="min-w-0">
+                <p class="text-xs font-semibold text-white truncate">System Admin</p>
+                <p class="text-[10px] text-gray-500 truncate">Tenant: Zen 63</p>
             </div>
         </div>
     </div>
@@ -98,16 +107,17 @@
 <!-- Main Content -->
 <main class="flex-1 flex flex-col bg-[#050505] min-w-0 relative">
     <!-- Topbar -->
-    <header class="h-16 border-b border-white/10 flex items-center justify-between px-6 bg-[#0a0a0a] shrink-0">
-        <div class="flex items-center gap-4">
-            <button class="md:hidden text-gray-400 hover:text-white">
+    <header class="h-16 border-b border-white/10 flex items-center justify-between px-4 md:px-6 bg-[#0a0a0a] shrink-0">
+        <div class="flex items-center gap-3 md:gap-4">
+            <!-- Mobile Menu Toggle -->
+            <button onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white p-1">
                 <span class="material-symbols-outlined">menu</span>
             </button>
-            <h1 id="header-title" class="text-lg font-semibold text-white">Dashboard Overview</h1>
+            <h1 id="header-title" class="text-base md:text-lg font-semibold text-white truncate">Dashboard Overview</h1>
         </div>
-        <div class="flex items-center gap-4">
-            <button onclick="openAddModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-1.5 rounded text-xs font-semibold flex items-center gap-2 transition-colors shadow-lg shadow-blue-500/20">
-                <span class="material-symbols-outlined text-[16px]">add</span> Add Item
+        <div class="flex items-center gap-4 shrink-0">
+            <button onclick="openAddModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-3 md:px-4 py-1.5 rounded text-xs font-semibold flex items-center gap-1 md:gap-2 transition-colors shadow-lg shadow-blue-500/20">
+                <span class="material-symbols-outlined text-[16px]">add</span> <span class="hidden sm:inline">Add Item</span>
             </button>
         </div>
     </header>
@@ -115,27 +125,27 @@
     <!-- ============================== -->
     <!-- VIEW: OVERVIEW                 -->
     <!-- ============================== -->
-    <div id="view-overview" class="view-section active flex-1 overflow-auto p-6 flex-col">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div class="bg-[#121212] border border-white/10 p-6 rounded-xl">
-                <p class="text-sm text-gray-400 uppercase tracking-widest mb-2 font-semibold">Today's Revenue</p>
-                <p class="text-3xl text-white font-serif" id="stat-revenue">R 0.00</p>
-                <p class="text-xs text-green-400 mt-2 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">trending_up</span> Live Data</p>
+    <div id="view-overview" class="view-section active flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-6 flex-col">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6">
+            <div class="bg-[#121212] border border-white/10 p-5 md:p-6 rounded-xl">
+                <p class="text-xs md:text-sm text-gray-400 uppercase tracking-widest mb-2 font-semibold">Today's Revenue</p>
+                <p class="text-2xl md:text-3xl text-white font-serif" id="stat-revenue">R 0.00</p>
+                <p class="text-[10px] md:text-xs text-green-400 mt-2 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">trending_up</span> Live Data</p>
             </div>
-            <div class="bg-[#121212] border border-white/10 p-6 rounded-xl">
-                <p class="text-sm text-gray-400 uppercase tracking-widest mb-2 font-semibold">Pending Bookings</p>
-                <p class="text-3xl text-amber-400 font-serif" id="stat-pending">0</p>
-                <p class="text-xs text-gray-500 mt-2">Awaiting confirmation</p>
+            <div class="bg-[#121212] border border-white/10 p-5 md:p-6 rounded-xl">
+                <p class="text-xs md:text-sm text-gray-400 uppercase tracking-widest mb-2 font-semibold">Pending Bookings</p>
+                <p class="text-2xl md:text-3xl text-amber-400 font-serif" id="stat-pending">0</p>
+                <p class="text-[10px] md:text-xs text-gray-500 mt-2">Awaiting confirmation</p>
             </div>
-            <div class="bg-[#121212] border border-white/10 p-6 rounded-xl border-l-4 border-l-blue-500">
-                <p class="text-sm text-gray-400 uppercase tracking-widest mb-2 font-semibold">Cars In Bay</p>
-                <p class="text-3xl text-blue-400 font-serif" id="stat-cars">0</p>
-                <p class="text-xs text-gray-500 mt-2">Currently washing</p>
+            <div class="bg-[#121212] border border-white/10 p-5 md:p-6 rounded-xl border-l-4 border-l-blue-500">
+                <p class="text-xs md:text-sm text-gray-400 uppercase tracking-widest mb-2 font-semibold">Cars In Bay</p>
+                <p class="text-2xl md:text-3xl text-blue-400 font-serif" id="stat-cars">0</p>
+                <p class="text-[10px] md:text-xs text-gray-500 mt-2">Currently washing</p>
             </div>
         </div>
 
-        <div class="bg-[#121212] border border-white/10 rounded-xl p-6 flex-1">
-            <h3 class="text-white font-semibold mb-6 flex items-center gap-2">
+        <div class="bg-[#121212] border border-white/10 rounded-xl p-5 md:p-6 flex-1 min-h-[300px]">
+            <h3 class="text-white font-semibold mb-6 flex items-center gap-2 text-sm md:text-base">
                 <span class="material-symbols-outlined text-green-400 animate-pulse">sensors</span>
                 Live Activity Stream
             </h3>
@@ -148,15 +158,15 @@
     <!-- ============================== -->
     <!-- VIEW: MENU & PRICING           -->
     <!-- ============================== -->
-    <div id="view-menu" class="view-section flex-1 overflow-auto p-6 flex-col">
-        <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6 shrink-0">
+    <div id="view-menu" class="view-section flex-1 overflow-hidden flex-col">
+        <div class="p-4 md:p-6 flex flex-col sm:flex-row justify-between gap-4 shrink-0">
             <div class="relative w-full sm:w-96">
                 <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-500 text-lg">search</span>
-                <input type="text" id="searchInput" placeholder="Search catalog items..."
+                <input type="text" id="searchInput" placeholder="Search items..."
                        class="w-full bg-[#121212] border border-white/10 text-sm text-white rounded-md pl-10 pr-4 py-2 focus:outline-none focus:border-blue-500 transition-colors">
             </div>
             <div class="flex gap-2">
-                <select id="categoryFilter" class="bg-[#121212] border border-white/10 text-sm text-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500">
+                <select id="categoryFilter" class="w-full sm:w-auto bg-[#121212] border border-white/10 text-sm text-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500">
                     <option value="all">All Categories</option>
                     <option value="food">Food</option>
                     <option value="car_wash">Car Wash</option>
@@ -164,21 +174,23 @@
             </div>
         </div>
 
-        <div class="bg-[#121212] border border-white/10 rounded-xl overflow-hidden shadow-xl flex-1 flex flex-col min-h-0">
-            <div class="overflow-x-auto flex-1">
-                <table class="w-full text-left border-collapse min-w-[600px]">
-                    <thead>
-                    <tr class="bg-[#1a1a1a] border-b border-white/10 text-xs uppercase tracking-wider text-gray-400 sticky top-0 z-10 shadow-sm">
-                        <th class="px-6 py-4 font-medium">Item Name</th>
-                        <th class="px-6 py-4 font-medium">Category</th>
-                        <th class="px-6 py-4 font-medium">Base Price (ZAR)</th>
-                        <th class="px-6 py-4 font-medium">Status</th>
-                        <th class="px-6 py-4 font-medium text-right">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody id="catalogTableBody" class="divide-y divide-white/5 text-sm">
-                    </tbody>
-                </table>
+        <div class="px-4 md:px-6 pb-4 md:pb-6 flex-1 min-h-0">
+            <div class="bg-[#121212] border border-white/10 rounded-xl overflow-hidden shadow-xl h-full flex flex-col">
+                <div class="overflow-x-auto flex-1">
+                    <table class="w-full text-left border-collapse min-w-[600px]">
+                        <thead>
+                        <tr class="bg-[#1a1a1a] border-b border-white/10 text-xs uppercase tracking-wider text-gray-400 sticky top-0 z-10 shadow-sm">
+                            <th class="px-4 md:px-6 py-3 md:py-4 font-medium">Item Name</th>
+                            <th class="px-4 md:px-6 py-3 md:py-4 font-medium">Category</th>
+                            <th class="px-4 md:px-6 py-3 md:py-4 font-medium">Price</th>
+                            <th class="px-4 md:px-6 py-3 md:py-4 font-medium">Status</th>
+                            <th class="px-4 md:px-6 py-3 md:py-4 font-medium text-right">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="catalogTableBody" class="divide-y divide-white/5 text-sm">
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -186,29 +198,29 @@
     <!-- ============================== -->
     <!-- VIEW: RESERVATIONS             -->
     <!-- ============================== -->
-    <div id="view-reservations" class="view-section flex-1 overflow-auto p-6 flex-col">
-        <div class="flex items-center justify-between mb-6">
-            <div>
-                <h2 class="text-xl text-white font-serif">Pending Approvals</h2>
-                <p class="text-gray-400 text-sm mt-1">Review incoming polymorphic bookings (Tables, Wash, Events).</p>
-            </div>
+    <div id="view-reservations" class="view-section flex-1 overflow-hidden flex-col">
+        <div class="p-4 md:p-6 shrink-0">
+            <h2 class="text-lg md:text-xl text-white font-serif">Pending Approvals</h2>
+            <p class="text-gray-400 text-xs md:text-sm mt-1">Review incoming bookings.</p>
         </div>
 
-        <div class="bg-[#121212] border border-white/10 rounded-xl overflow-hidden shadow-xl flex-1 flex flex-col min-h-0">
-            <div class="overflow-x-auto flex-1">
-                <table class="w-full text-left border-collapse min-w-[800px]">
-                    <thead>
-                    <tr class="bg-[#1a1a1a] border-b border-white/10 text-xs uppercase tracking-wider text-gray-400 sticky top-0 z-10 shadow-sm">
-                        <th class="px-6 py-4 font-medium">Guest Info</th>
-                        <th class="px-6 py-4 font-medium">Type</th>
-                        <th class="px-6 py-4 font-medium">Date & Time</th>
-                        <th class="px-6 py-4 font-medium">JSONB Details</th>
-                        <th class="px-6 py-4 font-medium text-right">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody id="reservationsTableBody" class="divide-y divide-white/5 text-sm">
-                    </tbody>
-                </table>
+        <div class="px-4 md:px-6 pb-4 md:pb-6 flex-1 min-h-0">
+            <div class="bg-[#121212] border border-white/10 rounded-xl overflow-hidden shadow-xl h-full flex flex-col">
+                <div class="overflow-x-auto flex-1">
+                    <table class="w-full text-left border-collapse min-w-[800px]">
+                        <thead>
+                        <tr class="bg-[#1a1a1a] border-b border-white/10 text-xs uppercase tracking-wider text-gray-400 sticky top-0 z-10 shadow-sm">
+                            <th class="px-4 md:px-6 py-3 md:py-4 font-medium">Guest Info</th>
+                            <th class="px-4 md:px-6 py-3 md:py-4 font-medium">Type</th>
+                            <th class="px-4 md:px-6 py-3 md:py-4 font-medium">Date & Time</th>
+                            <th class="px-4 md:px-6 py-3 md:py-4 font-medium">Details</th>
+                            <th class="px-4 md:px-6 py-3 md:py-4 font-medium text-right">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="reservationsTableBody" class="divide-y divide-white/5 text-sm">
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -216,16 +228,14 @@
     <!-- ============================== -->
     <!-- VIEW: ACTIVE ORDERS (Kitchen)  -->
     <!-- ============================== -->
-    <div id="view-orders" class="view-section flex-1 overflow-auto p-6 flex-col bg-[#0a0a0a]">
-        <div class="flex items-center justify-between mb-6">
-            <div>
-                <h2 class="text-xl text-white font-serif">Kitchen Display System</h2>
-                <p class="text-gray-400 text-sm mt-1">Active food and beverage tickets.</p>
-            </div>
+    <div id="view-orders" class="view-section flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-6 flex-col bg-[#0a0a0a]">
+        <div class="mb-4 md:mb-6 shrink-0">
+            <h2 class="text-lg md:text-xl text-white font-serif">Kitchen Display System</h2>
+            <p class="text-gray-400 text-xs md:text-sm mt-1">Active food and beverage tickets.</p>
         </div>
 
         <!-- Tickets Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="ordersGrid">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6" id="ordersGrid">
             <!-- Rendered via JS -->
             <p class="text-gray-500 text-sm italic">Loading tickets...</p>
         </div>
@@ -234,58 +244,55 @@
     <!-- ============================== -->
     <!-- VIEW: CAR WASH QUEUE (Kanban)  -->
     <!-- ============================== -->
-    <div id="view-carwash" class="view-section flex-1 overflow-hidden p-6 flex-col bg-[#0a0a0a]">
-        <div class="flex items-center justify-between mb-6 shrink-0">
-            <div>
-                <h2 class="text-xl text-white font-serif">Wash Bay Kanban</h2>
-                <p class="text-gray-400 text-sm mt-1">Drag-and-drop workflow for active vehicles.</p>
-            </div>
+    <div id="view-carwash" class="view-section flex-1 overflow-hidden p-4 md:p-6 flex-col bg-[#0a0a0a]">
+        <div class="mb-4 md:mb-6 shrink-0">
+            <h2 class="text-lg md:text-xl text-white font-serif">Wash Bay Kanban</h2>
+            <p class="text-gray-400 text-xs md:text-sm mt-1">Swipe/scroll horizontally for active vehicles.</p>
         </div>
 
-        <div class="flex-1 flex gap-6 overflow-x-auto pb-4 items-start">
+        <div class="flex-1 flex gap-4 md:gap-6 overflow-x-auto pb-4 items-start snap-x">
 
             <!-- Column 1: Queued -->
-            <div class="w-80 shrink-0 flex flex-col bg-[#121212] border border-white/10 rounded-xl h-full">
-                <div class="p-4 border-b border-white/5 flex justify-between items-center">
-                    <h3 class="font-bold text-gray-300 uppercase tracking-widest text-xs">Queued</h3>
+            <div class="w-72 md:w-80 shrink-0 snap-start flex flex-col bg-[#121212] border border-white/10 rounded-xl h-full max-h-full">
+                <div class="p-3 md:p-4 border-b border-white/5 flex justify-between items-center shrink-0">
+                    <h3 class="font-bold text-gray-300 uppercase tracking-widest text-[10px] md:text-xs">Queued</h3>
                     <span class="bg-white/10 text-gray-300 text-[10px] px-2 py-0.5 rounded-full" id="count-queued">0</span>
                 </div>
-                <div class="p-4 flex-1 space-y-4 overflow-y-auto" id="col-queued">
+                <div class="p-3 md:p-4 flex-1 space-y-3 md:space-y-4 overflow-y-auto" id="col-queued">
                     <!-- Rendered via JS -->
                 </div>
             </div>
 
             <!-- Column 2: Washing -->
-            <div class="w-80 shrink-0 flex flex-col bg-[#121212] border border-blue-500/20 rounded-xl h-full shadow-[0_0_15px_rgba(0,132,255,0.05)]">
-                <div class="p-4 border-b border-blue-500/20 flex justify-between items-center">
-                    <h3 class="font-bold text-blue-400 uppercase tracking-widest text-xs">Washing & Drying</h3>
+            <div class="w-72 md:w-80 shrink-0 snap-start flex flex-col bg-[#121212] border border-blue-500/20 rounded-xl h-full max-h-full shadow-[0_0_15px_rgba(0,132,255,0.05)]">
+                <div class="p-3 md:p-4 border-b border-blue-500/20 flex justify-between items-center shrink-0">
+                    <h3 class="font-bold text-blue-400 uppercase tracking-widest text-[10px] md:text-xs">Washing & Drying</h3>
                     <span class="bg-blue-500/20 text-blue-400 text-[10px] px-2 py-0.5 rounded-full" id="count-washing">0</span>
                 </div>
-                <div class="p-4 flex-1 space-y-4 overflow-y-auto" id="col-washing">
+                <div class="p-3 md:p-4 flex-1 space-y-3 md:space-y-4 overflow-y-auto" id="col-washing">
                     <!-- Rendered via JS -->
                 </div>
             </div>
 
             <!-- Column 3: Ready -->
-            <div class="w-80 shrink-0 flex flex-col bg-[#121212] border border-green-500/20 rounded-xl h-full shadow-[0_0_15px_rgba(34,197,94,0.05)]">
-                <div class="p-4 border-b border-green-500/20 flex justify-between items-center">
-                    <h3 class="font-bold text-green-400 uppercase tracking-widest text-xs">Ready for Pickup</h3>
+            <div class="w-72 md:w-80 shrink-0 snap-start flex flex-col bg-[#121212] border border-green-500/20 rounded-xl h-full max-h-full shadow-[0_0_15px_rgba(34,197,94,0.05)]">
+                <div class="p-3 md:p-4 border-b border-green-500/20 flex justify-between items-center shrink-0">
+                    <h3 class="font-bold text-green-400 uppercase tracking-widest text-[10px] md:text-xs">Ready</h3>
                     <span class="bg-green-500/20 text-green-400 text-[10px] px-2 py-0.5 rounded-full" id="count-ready">0</span>
                 </div>
-                <div class="p-4 flex-1 space-y-4 overflow-y-auto" id="col-ready">
+                <div class="p-3 md:p-4 flex-1 space-y-3 md:space-y-4 overflow-y-auto" id="col-ready">
                     <!-- Rendered via JS -->
                 </div>
             </div>
 
         </div>
     </div>
-
 </main>
 
-<!-- Edit Price Modal (Hidden by default) -->
-<div id="editModal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
-    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal()"></div>
-    <div class="relative bg-[#121212] border border-white/10 rounded-xl shadow-[0_0_40px_rgba(0,0,0,0.5)] w-full max-w-md p-6 m-4 modal-enter" id="modalBox">
+<!-- Edit Price Modal -->
+<div id="editModal" class="fixed inset-0 z-[110] flex items-center justify-center hidden px-4">
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
+    <div class="relative bg-[#121212] border border-white/10 rounded-xl shadow-[0_0_40px_rgba(0,0,0,0.8)] w-full max-w-md p-6 modal-enter" id="modalBox">
         <div class="flex justify-between items-center mb-6">
             <h3 class="text-lg font-semibold text-white">Edit Price</h3>
             <button onclick="closeModal()" class="text-gray-400 hover:text-white transition-colors">
@@ -295,42 +302,42 @@
         <form id="editForm" onsubmit="savePrice(event)">
             <input type="hidden" id="editItemId">
             <div class="mb-4">
-                <label class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Item Name</label>
+                <label class="block text-[10px] font-medium text-gray-400 uppercase tracking-wider mb-2">Item Name</label>
                 <input type="text" id="editItemName" disabled class="w-full bg-[#1a1a1a] border border-transparent text-gray-300 rounded-md p-3 text-sm cursor-not-allowed">
             </div>
             <div class="mb-8 relative">
-                <label class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Base Price (ZAR)</label>
+                <label class="block text-[10px] font-medium text-gray-400 uppercase tracking-wider mb-2">Base Price (ZAR)</label>
                 <div class="relative">
-                    <span class="absolute left-4 top-3.5 text-gray-500 font-medium">R</span>
+                    <span class="absolute left-4 top-3 text-gray-500 font-medium">R</span>
                     <input type="number" id="editItemPrice" required min="0" step="0.01"
                            class="w-full bg-black border border-white/10 text-white rounded-md pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-blue-500 transition-colors font-mono">
                 </div>
             </div>
-            <div class="flex justify-end gap-3 pt-4 border-t border-white/5">
-                <button type="button" onclick="closeModal()" class="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors rounded-md hover:bg-white/5">Cancel</button>
-                <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-md text-sm font-medium transition-colors shadow-lg shadow-blue-500/20">Save Changes</button>
+            <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4 border-t border-white/5">
+                <button type="button" onclick="closeModal()" class="w-full sm:w-auto px-4 py-3 sm:py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors rounded-md hover:bg-white/5">Cancel</button>
+                <button type="submit" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 sm:py-2 rounded-md text-sm font-medium transition-colors shadow-lg shadow-blue-500/20">Save Changes</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- Add Item Modal (Hidden by default) -->
-<div id="addModal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
-    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeAddModal()"></div>
-    <div class="relative bg-[#121212] border border-white/10 rounded-xl shadow-[0_0_40px_rgba(0,0,0,0.5)] w-full max-w-md p-6 m-4 modal-enter" id="addModalBox">
+<!-- Add Item Modal -->
+<div id="addModal" class="fixed inset-0 z-[110] flex items-center justify-center hidden px-4">
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeAddModal()"></div>
+    <div class="relative bg-[#121212] border border-white/10 rounded-xl shadow-[0_0_40px_rgba(0,0,0,0.8)] w-full max-w-md p-6 modal-enter" id="addModalBox">
         <div class="flex justify-between items-center mb-6">
-            <h3 class="text-lg font-semibold text-white">Add Catalog Item</h3>
+            <h3 class="text-lg font-semibold text-white">Add Item</h3>
             <button onclick="closeAddModal()" class="text-gray-400 hover:text-white transition-colors">
                 <span class="material-symbols-outlined">close</span>
             </button>
         </div>
         <form id="addForm" onsubmit="addItem(event)">
             <div class="mb-4">
-                <label class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Item Name</label>
+                <label class="block text-[10px] font-medium text-gray-400 uppercase tracking-wider mb-2">Item Name</label>
                 <input type="text" id="addName" required placeholder="e.g. Garlic Snails" class="w-full bg-black border border-white/10 text-white rounded-md p-3 text-sm focus:outline-none focus:border-blue-500 transition-colors">
             </div>
             <div class="mb-4">
-                <label class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Category</label>
+                <label class="block text-[10px] font-medium text-gray-400 uppercase tracking-wider mb-2">Category</label>
                 <select id="addCategory" required class="w-full bg-black border border-white/10 text-white rounded-md p-3 text-sm focus:outline-none focus:border-blue-500 transition-colors">
                     <option value="food">Food & Beverage</option>
                     <option value="car_wash">Car Wash Package</option>
@@ -338,29 +345,42 @@
                 </select>
             </div>
             <div class="mb-8 relative">
-                <label class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Base Price (ZAR)</label>
+                <label class="block text-[10px] font-medium text-gray-400 uppercase tracking-wider mb-2">Base Price (ZAR)</label>
                 <div class="relative">
-                    <span class="absolute left-4 top-3.5 text-gray-500 font-medium">R</span>
+                    <span class="absolute left-4 top-3 text-gray-500 font-medium">R</span>
                     <input type="number" id="addPrice" required min="0" step="0.01" placeholder="0.00" class="w-full bg-black border border-white/10 text-white rounded-md pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-blue-500 transition-colors font-mono">
                 </div>
             </div>
-            <div class="flex justify-end gap-3 pt-4 border-t border-white/5">
-                <button type="button" onclick="closeAddModal()" class="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors rounded-md hover:bg-white/5">Cancel</button>
-                <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-md text-sm font-medium transition-colors shadow-lg shadow-blue-500/20">Add Item</button>
+            <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4 border-t border-white/5">
+                <button type="button" onclick="closeAddModal()" class="w-full sm:w-auto px-4 py-3 sm:py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors rounded-md hover:bg-white/5">Cancel</button>
+                <button type="submit" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 sm:py-2 rounded-md text-sm font-medium transition-colors shadow-lg shadow-blue-500/20">Add Item</button>
             </div>
         </form>
     </div>
 </div>
 
-<div id="toast" class="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-zinc-800 border border-zinc-700 text-white px-4 py-3 rounded-md shadow-2xl hidden toast-enter">
+<div id="toast" class="fixed bottom-6 right-6 z-[120] flex items-center gap-3 bg-zinc-800 border border-zinc-700 text-white px-4 py-3 rounded-md shadow-2xl hidden toast-enter">
     <span class="material-symbols-outlined text-green-400" id="toastIcon">check_circle</span>
     <span id="toastMessage" class="text-sm font-medium">Success.</span>
 </div>
 
 <script>
     // Global Context
-    const id = '11111111-1111-1111-1111-111111111111'; // Simulated JWT Tenant Extracted Value
+    const id = '11111111-1111-1111-1111-111111111111';
     let orderData;
+
+    // --- Mobile Sidebar Logic ---
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        if (sidebar.classList.contains('-translate-x-full')) {
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+        } else {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        }
+    }
 
     const mockCatalogItems = [
         { id: '1', name: 'Famous Zen Wings', category: 'food', price: 85.00, isAvailable: true },
@@ -397,9 +417,9 @@
 
     const viewTitles = {
         'overview': 'Dashboard Overview',
-        'menu': 'Pricing & Menu Management',
-        'orders': 'Kitchen Display System',
-        'reservations': 'Pending Reservations',
+        'menu': 'Pricing & Menu',
+        'orders': 'Kitchen Display',
+        'reservations': 'Reservations',
         'carwash': 'Wash Bay Kanban'
     };
 
@@ -421,9 +441,16 @@
 
         document.getElementById('header-title').innerText = viewTitles[viewName] || 'Admin Dashboard';
         loadViewData(viewName);
+
+        // Auto-close drawer on mobile after clicking a link
+        if (window.innerWidth < 768) {
+            const sidebar = document.getElementById('sidebar');
+            if (!sidebar.classList.contains('-translate-x-full')) {
+                toggleSidebar();
+            }
+        }
     }
 
-    // Fetches fresh data whenever a tab is opened
     function loadViewData(viewName) {
         if (viewName === 'overview') {
             fetchDashboardStats();
@@ -468,11 +495,11 @@
     function renderActivity(activities) {
         const container = document.getElementById('activity-stream');
         container.innerHTML = activities.map(act => `
-            <div class="flex gap-4 items-start pb-4 border-b border-white/5">
-                <div class="w-2 h-2 rounded-full ${act.type === 'order' ? 'bg-blue-500' : 'bg-amber-500'} mt-2"></div>
+            <div class="flex gap-3 md:gap-4 items-start pb-4 border-b border-white/5">
+                <div class="w-2 h-2 rounded-full ${act.type === 'order' ? 'bg-blue-500' : 'bg-amber-500'} mt-2 shrink-0"></div>
                 <div>
-                    <p class="text-sm text-white">${act.message}</p>
-                    <p class="text-xs text-gray-500">${act.time}</p>
+                    <p class="text-xs md:text-sm text-white">${act.message}</p>
+                    <p class="text-[10px] md:text-xs text-gray-500 mt-0.5">${act.time}</p>
                 </div>
             </div>
         `).join('');
@@ -507,14 +534,14 @@
 
             tableBody.innerHTML += `
                 <tr class="hover:bg-white/5 transition-colors group">
-                    <td class="px-6 py-4">
+                    <td class="px-4 md:px-6 py-3 md:py-4">
                         <p class="font-medium text-white">${res.name}</p>
-                        <p class="text-xs text-gray-500">${res.email}</p>
+                        <p class="text-[10px] md:text-xs text-gray-500 truncate max-w-[120px] md:max-w-none">${res.email}</p>
                     </td>
-                    <td class="px-6 py-4">${typeBadge}</td>
-                    <td class="px-6 py-4 text-gray-300 font-medium">${dateStr}</td>
-                    <td class="px-6 py-4 text-xs text-gray-400 italic">${res.details}</td>
-                    <td class="px-6 py-4 text-right space-x-2">
+                    <td class="px-4 md:px-6 py-3 md:py-4">${typeBadge}</td>
+                    <td class="px-4 md:px-6 py-3 md:py-4 text-gray-300 font-medium whitespace-nowrap">${dateStr}</td>
+                    <td class="px-4 md:px-6 py-3 md:py-4 text-[10px] md:text-xs text-gray-400 italic max-w-[150px] md:max-w-xs truncate">${res.details}</td>
+                    <td class="px-4 md:px-6 py-3 md:py-4 text-right space-y-2 sm:space-y-0 sm:space-x-2 whitespace-nowrap">
                         <button onclick="updateReservation('${res.id}', 'confirmed')" class="px-3 py-1.5 bg-green-500/10 text-green-400 hover:bg-green-500 hover:text-white rounded text-xs font-semibold transition-colors shadow-sm">Approve</button>
                         <button onclick="updateReservation('${res.id}', 'cancelled')" class="px-3 py-1.5 bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white rounded text-xs font-semibold transition-colors shadow-sm">Decline</button>
                     </td>
@@ -533,13 +560,10 @@
 
             if (response.ok) {
                 showToast(`Reservation ${newStatus}!`);
-                fetchReservations(); // Reload the data
-            } else {
-                throw new Error("Server error");
-            }
+                fetchReservations();
+            } else { throw new Error("Server error"); }
         } catch (error) {
-            console.warn("Simulating reservation update fallback.");
-            mockReservations = mockReservations.filter(r => r.id !== resId); // Remove from mock pending list
+            mockReservations = mockReservations.filter(r => r.id !== resId);
             showToast(`Local Fallback: Reservation ${newStatus}!`);
             renderReservations(mockReservations);
         }
@@ -548,15 +572,14 @@
     function getElapsedTime(placedAtSeconds) {
         const now = Math.floor(Date.now() / 1000);
         const diff = now - placedAtSeconds;
-
         const minutes = Math.floor(diff / 60);
         const hours = Math.floor(minutes / 60);
 
         if (hours > 0) {
             const remainingMinutes = minutes % 60;
-            return `${hours}h ${remainingMinutes}m ago`;
+            return `${hours}h ${remainingMinutes}m`;
         } else {
-            return `${minutes}m ago`;
+            return `${minutes}m`;
         }
     }
 
@@ -565,16 +588,11 @@
     async function fetchCatalogItems() {
         try {
             const response = await fetch(`http://localhost:7070/api/private/catalog?tenantId=${id}`, { headers: { 'Accept': 'application/json' } });
-            if (response.ok) {
-                catalogItems = await response.json();
-            } else {
-                catalogItems = [...mockCatalogItems];
-            }
+            if (response.ok) catalogItems = await response.json();
+            else catalogItems = [...mockCatalogItems];
         } catch (error) {
             catalogItems = [...mockCatalogItems];
-        } finally {
-            renderTable();
-        }
+        } finally { renderTable(); }
     }
 
     function renderTable() {
@@ -596,22 +614,22 @@
 
         filteredItems.forEach(item => {
             const categoryLabel = item.category === 'food'
-                ? '<span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-amber-500/10 text-amber-500 text-[10px] font-bold uppercase tracking-wider"><span class="material-symbols-outlined text-[14px]">restaurant</span> Food</span>'
-                : '<span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-blue-500/10 text-blue-400 text-[10px] font-bold uppercase tracking-wider"><span class="material-symbols-outlined text-[14px]">local_car_wash</span> Car Wash</span>';
+                ? '<span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-amber-500/10 text-amber-500 text-[10px] font-bold uppercase tracking-wider"><span class="material-symbols-outlined text-[12px] md:text-[14px]">restaurant</span> <span class="hidden sm:inline">Food</span></span>'
+                : '<span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-blue-500/10 text-blue-400 text-[10px] font-bold uppercase tracking-wider"><span class="material-symbols-outlined text-[12px] md:text-[14px]">local_car_wash</span> <span class="hidden sm:inline">Wash</span></span>';
 
             const statusLabel = item.isAvailable
-                ? '<span class="px-2 py-1 rounded-md bg-green-500/10 text-green-400 text-[10px] font-bold uppercase tracking-wider">Available</span>'
-                : '<span class="px-2 py-1 rounded-md bg-red-500/10 text-red-400 text-[10px] font-bold uppercase tracking-wider">Out of Stock</span>';
+                ? '<span class="px-2 py-1 rounded-md bg-green-500/10 text-green-400 text-[9px] md:text-[10px] font-bold uppercase tracking-wider">Avail</span>'
+                : '<span class="px-2 py-1 rounded-md bg-red-500/10 text-red-400 text-[9px] md:text-[10px] font-bold uppercase tracking-wider">Out</span>';
 
             tableBody.innerHTML += `
                 <tr class="hover:bg-white/5 transition-colors group">
-                    <td class="px-6 py-4 font-medium text-white">${item.name}</td>
-                    <td class="px-6 py-4">${categoryLabel}</td>
-                    <td class="px-6 py-4 font-mono text-gray-300">R ${item.price.toFixed(2)}</td>
-                    <td class="px-6 py-4">${statusLabel}</td>
-                    <td class="px-6 py-4 text-right">
-                        <button onclick="openEditModal('${item.id}')" class="p-2 text-gray-500 hover:text-blue-400 hover:bg-blue-400/10 rounded-md transition-colors">
-                            <span class="material-symbols-outlined text-xl">edit</span>
+                    <td class="px-4 md:px-6 py-3 md:py-4 font-medium text-white text-xs md:text-sm truncate max-w-[120px] md:max-w-none">${item.name}</td>
+                    <td class="px-4 md:px-6 py-3 md:py-4">${categoryLabel}</td>
+                    <td class="px-4 md:px-6 py-3 md:py-4 font-mono text-gray-300 text-xs md:text-sm">R ${item.price.toFixed(2)}</td>
+                    <td class="px-4 md:px-6 py-3 md:py-4">${statusLabel}</td>
+                    <td class="px-4 md:px-6 py-3 md:py-4 text-right">
+                        <button onclick="openEditModal('${item.id}')" class="p-1.5 md:p-2 text-gray-500 hover:text-blue-400 hover:bg-blue-400/10 rounded-md transition-colors">
+                            <span class="material-symbols-outlined text-lg md:text-xl">edit</span>
                         </button>
                     </td>
                 </tr>
@@ -636,20 +654,13 @@
             if (response.ok) {
                 const index = catalogItems.findIndex(i => i.id === itemId);
                 if (index !== -1) catalogItems[index].price = newPrice;
-                closeModal();
-                renderTable();
-                showToast('Price updated successfully!');
+                closeModal(); renderTable(); showToast('Price updated!');
             } else { throw new Error("Server error"); }
         } catch (error) {
-            console.warn("Fallback price save.");
             const index = catalogItems.findIndex(i => i.id === itemId);
             if (index !== -1) catalogItems[index].price = newPrice;
-            closeModal();
-            renderTable();
-            showToast('Local Fallback: Price updated.');
-        } finally {
-            submitBtn.innerText = "Save Changes";
-        }
+            closeModal(); renderTable(); showToast('Local Fallback: Price updated.');
+        } finally { submitBtn.innerText = "Save Changes"; }
     }
 
     async function addItem(event) {
@@ -672,24 +683,15 @@
             });
 
             if (response.ok) {
-                fetchCatalogItems();
-                closeAddModal();
-                showToast('Item added successfully!');
+                fetchCatalogItems(); closeAddModal(); showToast('Item added!');
                 document.getElementById('addForm').reset();
             } else { throw new Error("Server error"); }
         } catch (error) {
-            console.warn("Fallback item add.");
             payload.id = 'new-id-' + Math.floor(Math.random() * 1000);
-            mockCatalogItems.push(payload);
-            catalogItems.push(payload);
-
-            closeAddModal();
-            renderTable();
-            showToast('Local Fallback: Item added.');
+            mockCatalogItems.push(payload); catalogItems.push(payload);
+            closeAddModal(); renderTable(); showToast('Local Fallback: Item added.');
             document.getElementById('addForm').reset();
-        } finally {
-            submitBtn.innerText = "Add Item";
-        }
+        } finally { submitBtn.innerText = "Add Item"; }
     }
 
     async function fetchOrders() {
@@ -698,14 +700,11 @@
             orderData = response.ok ? await response.json() : mockOrders;
             renderOrders(orderData);
         } catch (error) {
-            console.log(error)
-            orderData = mockOrders;
-            renderOrders(orderData);
+            orderData = mockOrders; renderOrders(orderData);
         }
     }
 
     function renderOrders(orders) {
-        console.log(orders);
         const grid = document.getElementById('ordersGrid');
         grid.innerHTML = '';
 
@@ -717,30 +716,30 @@
         orders.forEach(order => {
             const itemsHtml = Object.entries(order.orderItems)
                 .map(([itemName, qty]) =>
-                    `<li class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                ${itemName} <span class="text-gray-400">x${qty}</span>
+                    `<li class="flex items-center gap-2 text-xs md:text-sm">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></span>
+                <span class="truncate">${itemName}</span> <span class="text-gray-400 shrink-0">x${qty}</span>
             </li>`
                 ).join('');
 
             grid.innerHTML += `
                 <div class="bg-[#121212] border border-white/10 rounded-xl overflow-hidden shadow-lg flex flex-col">
-                    <div class="bg-blue-600/10 border-b border-blue-500/20 p-4 flex justify-between items-start">
-                        <div>
-                            <h3 class="font-bold text-white uppercase tracking-widest text-sm">${order.name} (${order.type})</h3>
-                            <p class="text-[10px] text-gray-400 mt-1">Ticket: #${order.orderId.slice(-4).toUpperCase()}</p>
+                    <div class="bg-blue-600/10 border-b border-blue-500/20 p-3 md:p-4 flex justify-between items-start">
+                        <div class="min-w-0 pr-2">
+                            <h3 class="font-bold text-white uppercase tracking-widest text-[10px] md:text-xs truncate">${order.name} (${order.type})</h3>
+                            <p class="text-[9px] md:text-[10px] text-gray-400 mt-1">Ticket: #${order.orderId.slice(-4).toUpperCase()}</p>
                         </div>
-                        <span class="bg-black/50 text-red-400 border border-red-500/20 px-2 py-1 rounded text-[10px] font-bold tracking-widest animate-pulse">
+                        <span class="bg-black/50 text-red-400 border border-red-500/20 px-2 py-1 rounded text-[9px] md:text-[10px] font-bold tracking-widest animate-pulse shrink-0">
                             ${getElapsedTime(order.orderedAt)}
                         </span>
                     </div>
-                    <div class="p-5 flex-1">
-                        <ul class="text-gray-300 text-sm space-y-2 font-medium">
+                    <div class="p-4 md:p-5 flex-1">
+                        <ul class="text-gray-300 space-y-2 font-medium">
                             ${itemsHtml}
                         </ul>
                     </div>
-                    <div class="p-4 border-t border-white/5 bg-black/20">
-                        <button onclick="serveOrder('${order.orderId}')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded text-xs uppercase tracking-[0.2em] transition-all shadow-lg shadow-blue-500/20">
+                    <div class="p-3 md:p-4 border-t border-white/5 bg-black/20">
+                        <button onclick="serveOrder('${order.orderId}')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 md:py-2.5 rounded text-[10px] md:text-xs uppercase tracking-[0.2em] transition-all shadow-lg shadow-blue-500/20">
                             Mark Served
                         </button>
                     </div>
@@ -750,10 +749,9 @@
     }
 
     function serveOrder(orderId) {
-        // Fallback simulate success
-        orderData = orderData.filter(o => o.id !== orderId);
+        orderData = orderData.filter(o => o.orderId !== orderId && o.id !== orderId);
         showToast("Ticket marked as served!");
-        fetchOrders();
+        renderOrders(orderData); // Use local render for immediate feedback
     }
 
     async function fetchCarWash() {
@@ -761,9 +759,7 @@
             const response = await fetch(`http://localhost:7070/api/private/carwash/active?tenantId=${id}`, { headers: { 'Accept': 'application/json' } });
             const data = response.ok ? await response.json() : mockCarWash;
             renderCarWash(data);
-        } catch (error) {
-            renderCarWash(mockCarWash);
-        }
+        } catch (error) { renderCarWash(mockCarWash); }
     }
 
     function renderCarWash(queue) {
@@ -776,26 +772,19 @@
 
         queue.forEach(job => {
             counts[job.status]++;
-
-            // Action button changes based on current stage
             let actionBtn = '';
-            if (job.status === 'queued') {
-                actionBtn = `<button onclick="updateWashStatus('${job.id}', 'washing')" class="w-full mt-3 bg-white/10 hover:bg-white/20 text-white text-[10px] uppercase tracking-widest font-bold py-2 rounded transition-colors">Start Wash</button>`;
-            } else if (job.status === 'washing') {
-                actionBtn = `<button onclick="updateWashStatus('${job.id}', 'ready')" class="w-full mt-3 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 text-[10px] uppercase tracking-widest font-bold py-2 rounded transition-colors border border-blue-500/30">Mark Ready</button>`;
-            } else {
-                actionBtn = `<button onclick="updateWashStatus('${job.id}', 'completed')" class="w-full mt-3 bg-green-500/20 hover:bg-green-500/30 text-green-400 text-[10px] uppercase tracking-widest font-bold py-2 rounded transition-colors border border-green-500/30">Handover Keys</button>`;
-            }
+            if (job.status === 'queued') actionBtn = `<button onclick="updateWashStatus('${job.id}', 'washing')" class="w-full mt-3 bg-white/10 hover:bg-white/20 text-white text-[10px] uppercase tracking-widest font-bold py-2.5 md:py-2 rounded transition-colors">Start Wash</button>`;
+            else if (job.status === 'washing') actionBtn = `<button onclick="updateWashStatus('${job.id}', 'ready')" class="w-full mt-3 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 text-[10px] uppercase tracking-widest font-bold py-2.5 md:py-2 rounded transition-colors border border-blue-500/30">Mark Ready</button>`;
+            else actionBtn = `<button onclick="updateWashStatus('${job.id}', 'completed')" class="w-full mt-3 bg-green-500/20 hover:bg-green-500/30 text-green-400 text-[10px] uppercase tracking-widest font-bold py-2.5 md:py-2 rounded transition-colors border border-green-500/30">Handover Keys</button>`;
 
             const card = `
                 <div class="bg-black border border-white/5 rounded-lg p-4 shadow-sm cursor-pointer hover:border-white/20 transition-colors group relative">
-                    <span class="absolute top-4 right-4 text-[10px] font-mono text-gray-500 uppercase">${job.plate}</span>
-                    <h4 class="font-bold text-white text-sm mb-1 pr-16">${job.vehicle}</h4>
-                    <p class="text-[10px] text-gray-400 uppercase tracking-wider mb-2">${job.package}</p>
+                    <span class="absolute top-4 right-4 text-[9px] md:text-[10px] font-mono text-gray-500 uppercase">${job.plate}</span>
+                    <h4 class="font-bold text-white text-xs md:text-sm mb-1 pr-16 truncate">${job.vehicle}</h4>
+                    <p class="text-[9px] md:text-[10px] text-gray-400 uppercase tracking-wider mb-2 truncate">${job.package}</p>
                     ${actionBtn}
                 </div>
             `;
-
             if (job.status === 'queued') colQueued.innerHTML += card;
             else if (job.status === 'washing') colWashing.innerHTML += card;
             else if (job.status === 'ready') colReady.innerHTML += card;
@@ -807,7 +796,6 @@
     }
 
     function updateWashStatus(jobId, newStatus) {
-        // Fallback simulate success
         if (newStatus === 'completed') {
             mockCarWash = mockCarWash.filter(j => j.id !== jobId);
             showToast("Vehicle handover completed!");
@@ -816,7 +804,7 @@
             if (job) job.status = newStatus;
             showToast(`Vehicle moved to ${newStatus}!`);
         }
-        fetchCarWash();
+        renderCarWash(mockCarWash);
     }
 
     const editModal = document.getElementById('editModal');
