@@ -18,16 +18,21 @@
         .gradient-text { background: linear-gradient(to right, #0084ff, #00c6ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         .wait-card { border-left: 4px solid var(--zen-blue); }
+
+        /* Mobile Menu Transitions */
+        #mobile-menu { transition: transform 0.3s ease-in-out; }
     </style>
 </head>
-<body class="antialiased">
+<body class="antialiased overflow-x-hidden">
 
+<!-- Main Navigation -->
 <nav class="fixed w-full z-[100] glass px-6 py-4 flex justify-between items-center border-b border-white/10 transition-all duration-300" id="main-nav">
     <div class="flex items-center gap-3">
         <img src="branding/company/Original-logo.png" alt="Zen 63 Logo" class="h-10 w-10 object-cover rounded-full border border-blue-500/50 shadow-[0_0_15px_rgba(0,132,255,0.3)]" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 40 40\'><rect width=\'40\' height=\'40\' fill=\'%23111\'/><text x=\'50%\' y=\'50%\' font-family=\'sans-serif\' font-size=\'12\' fill=\'%230084ff\' text-anchor=\'middle\' dy=\'.3em\' font-weight=\'bold\'>Z63</text></svg>'">
         <span class="text-xl font-bold tracking-tighter uppercase serif">Zen <span class="text-blue-500">63</span></span>
     </div>
 
+    <!-- Desktop Links -->
     <div class="hidden md:flex items-center space-x-8 text-[11px] uppercase tracking-[0.2em] font-semibold">
         <a href="#home" class="hover:text-blue-500 transition">Home</a>
         <a href="#buffet" class="hover:text-blue-500 transition text-amber-400">Monday Buffet</a>
@@ -36,16 +41,44 @@
         <a href="#booking" class="hover:text-blue-500 transition">Reservations</a>
     </div>
 
-    <div class="flex items-center gap-6">
-        <a href="login/login.html" class="hidden md:block text-[11px] uppercase tracking-widest text-gray-400 hover:text-white transition font-semibold">Sign In / Register</a>
-
-        <a href="order/order.html" class="hidden md:block text-[11px] uppercase tracking-widest text-blue-400 hover:text-blue-300 transition font-bold">Order Online</a>
-
+    <!-- Desktop Right Actions -->
+    <div class="hidden md:flex items-center gap-6">
+        <a href="login/login.html" class="text-[11px] uppercase tracking-widest text-gray-400 hover:text-white transition font-semibold">Sign In / Register</a>
+        <a href="order/order.html" class="text-[11px] uppercase tracking-widest text-blue-400 hover:text-blue-300 transition font-bold">Order Online</a>
         <a href="#booking" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 text-xs font-bold uppercase rounded-sm transition-all transform hover:scale-105 shadow-lg shadow-blue-500/20">
             Book a Table
         </a>
     </div>
+
+    <!-- Mobile Hamburger Button -->
+    <button id="mobile-menu-btn" class="md:hidden text-white focus:outline-none p-2">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
 </nav>
+
+<!-- Mobile Slide-out Menu -->
+<div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[200] transform translate-x-full md:hidden flex flex-col items-center justify-center space-y-8 backdrop-blur-md">
+    <button id="close-menu-btn" class="absolute top-6 right-6 text-gray-400 hover:text-white p-2 focus:outline-none">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+    </button>
+
+    <a href="#home" class="mobile-link text-lg uppercase tracking-[0.2em] font-semibold text-white hover:text-blue-500 transition">Home</a>
+    <a href="#buffet" class="mobile-link text-lg uppercase tracking-[0.2em] font-semibold text-amber-400 hover:text-amber-300 transition">Monday Buffet</a>
+    <a href="#menu" class="mobile-link text-lg uppercase tracking-[0.2em] font-semibold text-white hover:text-blue-500 transition">Menu</a>
+    <a href="#services" class="mobile-link text-lg uppercase tracking-[0.2em] font-semibold text-white hover:text-blue-500 transition">Car Wash</a>
+
+    <div class="w-16 h-px bg-white/20 my-4"></div>
+
+    <a href="login/login.html" class="mobile-link text-sm uppercase tracking-widest text-gray-400 hover:text-white transition font-semibold">Sign In / Register</a>
+    <a href="order/order.html" class="mobile-link text-sm uppercase tracking-widest text-blue-400 font-bold">Order Online</a>
+    <a href="#booking" class="mobile-link bg-blue-600 text-white px-8 py-3 text-sm font-bold uppercase rounded-sm shadow-lg shadow-blue-500/20 mt-4">
+        Book a Table
+    </a>
+</div>
 
 <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
     <div class="absolute inset-0 bg-black">
@@ -53,73 +86,73 @@
         <img src="branding/company/logo.jpg" class="w-full h-full object-cover opacity-20 blur-sm scale-110" alt="Background">
     </div>
 
-    <div class="relative z-20 text-center px-4">
-        <h2 class="text-blue-400 uppercase tracking-[0.6em] text-[10px] md:text-xs mb-4 font-bold animate-pulse">Fine Dining • Relaxation • Connection</h2>
-        <h1 class="text-6xl md:text-[100px] serif leading-none mb-6">
+    <div class="relative z-20 text-center px-4 mt-16 md:mt-0">
+        <h2 class="text-blue-400 uppercase tracking-[0.4em] md:tracking-[0.6em] text-[9px] md:text-xs mb-4 font-bold animate-pulse">Fine Dining • Relaxation • Connection</h2>
+        <h1 class="text-5xl md:text-[100px] serif leading-none mb-6">
             Elite <span class="gradient-text">Lounge</span> <br> Experience
         </h1>
-        <p class="max-w-2xl mx-auto text-gray-400 font-light text-sm md:text-lg mb-10 leading-relaxed">
+        <p class="max-w-2xl mx-auto text-gray-400 font-light text-sm md:text-lg mb-10 leading-relaxed px-4">
             Situated in the heart of Katlehong. A neighborhood gem rooted in warmth, flavor, and an upmarket atmosphere.
         </p>
-        <div class="flex flex-col md:flex-row gap-4 justify-center">
-            <a href="order/order.html" class="bg-blue-600 text-white px-10 py-4 font-bold uppercase text-xs hover:bg-blue-500 transition-all shadow-lg shadow-blue-500/20">Order Online</a>
-            <a href="#booking" class="bg-white text-black px-10 py-4 font-bold uppercase text-xs hover:bg-gray-200 transition-all">Book a Table</a>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center px-6">
+            <a href="order/order.html" class="bg-blue-600 text-white px-10 py-4 font-bold uppercase text-xs hover:bg-blue-500 transition-all shadow-lg shadow-blue-500/20 w-full sm:w-auto text-center">Order Online</a>
+            <a href="#booking" class="bg-white text-black px-10 py-4 font-bold uppercase text-xs hover:bg-gray-200 transition-all w-full sm:w-auto text-center">Book a Table</a>
         </div>
     </div>
 </section>
 
-<section id="buffet" class="py-24 px-6 max-w-7xl mx-auto">
-    <div class="grid lg:grid-cols-2 gap-16 items-center">
-        <div class="relative">
-            <img src="branding/info/PricingPerPerson.png" alt="Monday Buffet" class="w-full h-96 object-cover rounded-xl shadow-2xl border border-white/5 bg-zinc-900">
+<section id="buffet" class="py-20 md:py-24 px-6 max-w-7xl mx-auto">
+    <div class="grid lg:grid-cols-2 gap-12 md:gap-16 items-center">
+        <div class="relative px-4 md:px-0">
+            <img src="branding/info/PricingPerPerson.png" alt="Monday Buffet" class="w-full h-64 md:h-96 object-cover rounded-xl shadow-2xl border border-white/5 bg-zinc-900">
 
-            <div class="absolute -bottom-6 -right-6 bg-blue-600 p-8 rounded-lg shadow-xl">
-                <p class="text-xs uppercase font-bold tracking-widest text-blue-100">Starts At</p>
-                <p class="text-4xl font-bold italic serif">R100</p>
-                <p class="text-[10px] uppercase">Per Person</p>
+            <div class="absolute -bottom-6 right-0 md:-right-6 bg-blue-600 p-6 md:p-8 rounded-lg shadow-xl">
+                <p class="text-[10px] md:text-xs uppercase font-bold tracking-widest text-blue-100">Starts At</p>
+                <p class="text-3xl md:text-4xl font-bold italic serif">R100</p>
+                <p class="text-[9px] md:text-[10px] uppercase">Per Person</p>
             </div>
         </div>
-        <div class="space-y-6">
-            <h2 class="text-4xl serif">The <span class="text-blue-500">Monday</span> Buffet</h2>
-            <p class="text-gray-400 leading-loose">
+        <div class="space-y-6 mt-8 md:mt-0">
+            <h2 class="text-3xl md:text-4xl serif text-center md:text-left">The <span class="text-blue-500">Monday</span> Buffet</h2>
+            <p class="text-gray-400 leading-relaxed md:leading-loose text-center md:text-left text-sm md:text-base">
                 Kick off your week with live music and our signature buffet selection. Whether you're dining in or grabbing a takeaway, we bring heritage flavors to your table.
             </p>
             <div class="grid grid-cols-2 gap-4">
-                <div class="p-4 bg-zinc-900 border border-white/5 rounded">
-                    <p class="text-blue-500 font-bold">R100</p>
-                    <p class="text-xs uppercase text-gray-500">Dine-In</p>
+                <div class="p-4 bg-zinc-900 border border-white/5 rounded text-center">
+                    <p class="text-blue-500 font-bold text-xl md:text-base">R100</p>
+                    <p class="text-[10px] md:text-xs uppercase text-gray-500">Dine-In</p>
                 </div>
-                <div class="p-4 bg-zinc-900 border border-white/5 rounded">
-                    <p class="text-blue-500 font-bold">R120</p>
-                    <p class="text-xs uppercase text-gray-500">Takeaway</p>
+                <div class="p-4 bg-zinc-900 border border-white/5 rounded text-center">
+                    <p class="text-blue-500 font-bold text-xl md:text-base">R120</p>
+                    <p class="text-[10px] md:text-xs uppercase text-gray-500">Takeaway</p>
                 </div>
             </div>
-            <p class="text-[11px] text-gray-500 italic uppercase tracking-widest">Available every Monday from 12:00</p>
+            <p class="text-[10px] md:text-[11px] text-gray-500 italic uppercase tracking-widest text-center md:text-left">Available every Monday from 12:00</p>
         </div>
     </div>
 </section>
 
-<section id="services" class="bg-zinc-950 py-24 px-6 border-y border-white/5">
+<section id="services" class="bg-zinc-950 py-20 md:py-24 px-6 border-y border-white/5">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
-        <div class="flex-1 order-2 md:order-1">
-            <img src="branding/info/CarWash.png" alt="Car Wash Service" class="w-full h-80 object-cover rounded-xl border border-blue-500/20 shadow-[0_0_30px_rgba(0,132,255,0.1)] bg-zinc-900">
+        <div class="flex-1 order-2 md:order-1 w-full">
+            <img src="branding/info/CarWash.png" alt="Car Wash Service" class="w-full h-64 md:h-80 object-cover rounded-xl border border-blue-500/20 shadow-[0_0_30px_rgba(0,132,255,0.1)] bg-zinc-900">
         </div>
-        <div class="flex-1 space-y-8 order-1 md:order-2">
-            <h2 class="text-4xl serif leading-tight">Relax While We <br> <span class="text-blue-500 italic">Polish Your Ride</span></h2>
+        <div class="flex-1 space-y-6 md:space-y-8 order-1 md:order-2 text-center md:text-left w-full">
+            <h2 class="text-3xl md:text-4xl serif leading-tight">Relax While We <br class="hidden md:block"> <span class="text-blue-500 italic">Polish Your Ride</span></h2>
             <p class="text-gray-400 text-sm md:text-base leading-relaxed">
                 Our Executive Car Wash service allows you to enjoy our fine dining lounge while we take care of your vehicle. From a quick Wash & Go to a Full Valet.
             </p>
-            <div class="space-y-4">
+            <div class="space-y-4 max-w-md mx-auto md:mx-0">
                 <div class="flex justify-between items-center border-b border-white/10 pb-2">
-                    <span class="text-sm font-semibold uppercase tracking-widest">Wash & Go</span>
+                    <span class="text-xs md:text-sm font-semibold uppercase tracking-widest">Wash & Go</span>
                     <span class="text-blue-400 font-bold">From R30</span>
                 </div>
                 <div class="flex justify-between items-center border-b border-white/10 pb-2">
-                    <span class="text-sm font-semibold uppercase tracking-widest">Wash & Dry</span>
+                    <span class="text-xs md:text-sm font-semibold uppercase tracking-widest">Wash & Dry</span>
                     <span class="text-blue-400 font-bold">From R40</span>
                 </div>
                 <div class="flex justify-between items-center border-b border-white/10 pb-2">
-                    <span class="text-sm font-semibold uppercase tracking-widest">Full Wash</span>
+                    <span class="text-xs md:text-sm font-semibold uppercase tracking-widest">Full Wash</span>
                     <span class="text-blue-400 font-bold">From R70</span>
                 </div>
             </div>
@@ -127,26 +160,26 @@
     </div>
 </section>
 
-<section id="menu" class="py-24 px-6 max-w-7xl mx-auto">
-    <div class="text-center mb-16">
-        <h2 class="text-4xl serif mb-4">Our Signature Menu</h2>
-        <p class="text-gray-500 text-sm uppercase tracking-[0.3em] mb-6">Comfort Food with a Vibrant Twist</p>
-        <a href="order/order.html" class="inline-block bg-blue-600/10 text-blue-400 border border-blue-500/50 px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all">View Full Menu & Order</a>
+<section id="menu" class="py-20 md:py-24 px-6 max-w-7xl mx-auto">
+    <div class="text-center mb-12 md:mb-16">
+        <h2 class="text-3xl md:text-4xl serif mb-4">Our Signature Menu</h2>
+        <p class="text-gray-500 text-[10px] md:text-sm uppercase tracking-[0.2em] md:tracking-[0.3em] mb-6">Comfort Food with a Vibrant Twist</p>
+        <a href="order/order.html" class="inline-block bg-blue-600/10 text-blue-400 border border-blue-500/50 px-6 py-3 md:py-2 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all">View Full Menu & Order</a>
     </div>
 
     <!-- The DOM element that Javascript will inject dynamic DB data into -->
-    <div id="featured-menu" class="grid md:grid-cols-3 gap-8">
+    <div id="featured-menu" class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
         <!-- Live Catalog Items Render Here -->
     </div>
 </section>
 
-<section id="booking" class="py-24 px-6 bg-zinc-950">
-    <div class="max-w-4xl mx-auto text-center mb-12">
-        <h2 class="text-4xl serif mb-4">Make a Reservation</h2>
-        <p class="text-gray-400 text-sm">Join us for intimate Sundays, corporate events, or a casual night out.</p>
+<section id="booking" class="py-20 md:py-24 px-6 bg-zinc-950">
+    <div class="max-w-4xl mx-auto text-center mb-10 md:mb-12">
+        <h2 class="text-3xl md:text-4xl serif mb-4">Make a Reservation</h2>
+        <p class="text-gray-400 text-sm px-4">Join us for intimate Sundays, corporate events, or a casual night out.</p>
     </div>
 
-    <div class="max-w-2xl mx-auto glass p-8 md:p-12 rounded-xl shadow-2xl relative">
+    <div class="max-w-2xl mx-auto glass p-6 md:p-12 rounded-xl shadow-2xl relative">
         <div id="loadingOverlay" class="absolute inset-0 bg-black/80 backdrop-blur-sm rounded-xl flex items-center justify-center hidden z-50">
             <div class="text-blue-500 flex flex-col items-center">
                 <svg class="animate-spin h-8 w-8 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -157,26 +190,26 @@
             </div>
         </div>
 
-        <form id="resForm" class="space-y-6">
-            <div class="grid md:grid-cols-2 gap-6 text-left">
+        <form id="resForm" class="space-y-5 md:space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 text-left">
                 <div class="space-y-1">
                     <label class="text-[10px] uppercase font-bold text-gray-500">Guest Name</label>
-                    <input type="text" id="name" required placeholder="e.g. Ntokozo" class="w-full bg-black border border-white/10 p-4 rounded focus:border-blue-500 outline-none transition text-sm">
+                    <input type="text" id="name" required placeholder="e.g. Ntokozo" class="w-full bg-black border border-white/10 p-3 md:p-4 rounded focus:border-blue-500 outline-none transition text-sm">
                 </div>
                 <div class="space-y-1">
                     <label class="text-[10px] uppercase font-bold text-gray-500">Email Address</label>
-                    <input type="email" id="email" required placeholder="name@example.com" class="w-full bg-black border border-white/10 p-4 rounded focus:border-blue-500 outline-none transition text-sm">
+                    <input type="email" id="email" required placeholder="name@example.com" class="w-full bg-black border border-white/10 p-3 md:p-4 rounded focus:border-blue-500 outline-none transition text-sm">
                 </div>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-6 text-left">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 text-left">
                 <div class="space-y-1">
                     <label class="text-[10px] uppercase font-bold text-gray-500">Date & Time</label>
-                    <input type="datetime-local" id="datetime" required class="w-full bg-black border border-white/10 p-4 rounded focus:border-blue-500 outline-none transition text-sm [color-scheme:dark]">
+                    <input type="datetime-local" id="datetime" required class="w-full bg-black border border-white/10 p-3 md:p-4 rounded focus:border-blue-500 outline-none transition text-sm [color-scheme:dark]">
                 </div>
                 <div class="space-y-1 text-left">
                     <label class="text-[10px] uppercase font-bold text-gray-500">Type of Occasion</label>
-                    <select id="type" class="w-full bg-black border border-white/10 p-4 rounded focus:border-blue-500 outline-none transition text-sm cursor-pointer">
+                    <select id="type" class="w-full bg-black border border-white/10 p-3 md:p-4 rounded focus:border-blue-500 outline-none transition text-sm cursor-pointer">
                         <option value="table">Casual Dining / Table Booking</option>
                         <option value="event">Corporate Event / Private Milestone</option>
                         <option value="car_wash">Executive Car Wash & Dine</option>
@@ -186,14 +219,14 @@
 
             <div class="space-y-1 text-left">
                 <label class="text-[10px] uppercase font-bold text-gray-500">Details (Party Size / Vehicle Make)</label>
-                <input type="text" id="details" required placeholder="e.g. 4 Guests OR Silver BMW 3 Series" class="w-full bg-black border border-white/10 p-4 rounded focus:border-blue-500 outline-none transition text-sm">
+                <input type="text" id="details" required placeholder="e.g. 4 Guests OR Silver BMW 3 Series" class="w-full bg-black border border-white/10 p-3 md:p-4 rounded focus:border-blue-500 outline-none transition text-sm">
             </div>
 
             <div class="pt-2">
                 <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded uppercase tracking-[0.2em] text-xs transition-all shadow-lg shadow-blue-500/20">
                     Request Availability
                 </button>
-                <p class="text-[10px] text-gray-500 text-center mt-3 uppercase tracking-widest">
+                <p class="text-[9px] md:text-[10px] text-gray-500 text-center mt-3 uppercase tracking-widest">
                     * All bookings are subject to final staff confirmation.
                 </p>
             </div>
@@ -203,18 +236,18 @@
     </div>
 </section>
 
-<footer class="py-20 px-6 border-t border-white/5 text-center relative">
+<footer class="py-16 md:py-20 px-6 border-t border-white/5 text-center relative">
     <div class="flex flex-col items-center gap-6">
         <div class="text-2xl font-bold tracking-tighter serif uppercase">Zen <span class="text-blue-500">63</span></div>
-        <p class="text-gray-500 text-[11px] uppercase tracking-[0.3em]">
+        <p class="text-gray-500 text-[10px] md:text-[11px] uppercase tracking-[0.2em] md:tracking-[0.3em] px-4 leading-relaxed">
             63 Corner Mosako & Sebobane St, Katlehong, Gauteng 1434
         </p>
-        <div class="flex space-x-6 text-xs text-gray-400">
+        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 text-xs text-gray-400">
             <a href="tel:+27665192126" class="hover:text-white transition">Call Us: 066 519 2126</a>
             <a href="mailto:info@zen63lounge.co.za" class="hover:text-white transition">Email Us</a>
         </div>
 
-        <div class="mt-8 border-t border-white/5 pt-8 w-full max-w-md flex justify-between items-center text-[10px] uppercase tracking-widest text-gray-600">
+        <div class="mt-8 border-t border-white/5 pt-8 w-full max-w-md flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0 text-[9px] md:text-[10px] uppercase tracking-widest text-gray-600">
             <p>&copy; 2026 Zen 63. Built for the Elite.</p>
             <a href="admin/admin.html" class="hover:text-blue-500 transition-colors">Staff Portal</a>
         </div>
@@ -222,7 +255,38 @@
 </footer>
 
 <script>
+    // ==========================================
+    // MOBILE NAVIGATION LOGIC
+    // ==========================================
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const closeMenuBtn = document.getElementById('close-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
 
+    // Open Mobile Menu
+    mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.remove('translate-x-full');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling underneath
+    });
+
+    // Close Mobile Menu
+    closeMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.add('translate-x-full');
+        document.body.style.overflow = ''; // Restore scrolling
+    });
+
+    // Close menu when a link is clicked
+    mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.add('translate-x-full');
+            document.body.style.overflow = '';
+        });
+    });
+
+
+    // ==========================================
+    // MENU API INTEGRATION (DYNAMIC FETCH)
+    // ==========================================
     async function loadFeaturedMenu() {
         const menuContainer = document.getElementById('featured-menu');
         const fallbackData = [
@@ -231,7 +295,7 @@
             { name: 'Crafted With Care', description: 'Our meals are prepared fresh to order. We invite you to explore our affordable wine list and snacks.', price: 0 }
         ];
 
-        try
+        try{
             const response = await fetch('http://localhost:7070/api/private/catalog?tenantId=11111111-1111-1111-1111-111111111111');
             let items = fallbackData;
 
@@ -241,25 +305,24 @@
             }
 
             menuContainer.innerHTML = items.map(item => `
-                <div class="glass p-8 rounded-lg group hover:border-blue-500/50 transition-all relative flex flex-col h-full">
-                    <h3 class="text-xl font-bold mb-4 uppercase tracking-tighter">${item.name}</h3>
-                    <p class="text-gray-400 text-sm mb-6 leading-relaxed">${item.description || 'A signature Zen 63 experience.'}</p>
+                <div class="glass p-6 md:p-8 rounded-lg group hover:border-blue-500/50 transition-all relative flex flex-col h-full text-left">
+                    <h3 class="text-lg md:text-xl font-bold mb-3 md:mb-4 uppercase tracking-tighter">${item.name}</h3>
+                    <p class="text-gray-400 text-xs md:text-sm mb-6 leading-relaxed">${item.description || 'A signature Zen 63 experience.'}</p>
                     <div class="mt-auto flex justify-between items-end border-t border-white/10 pt-4">
-                        ${item.price > 0 ? `<p class="text-2xl font-bold text-white font-serif">R ${item.price.toFixed(2)}</p>` : `<p class="text-sm font-bold text-blue-400 uppercase tracking-widest">Variable</p>`}
-                        <p class="text-blue-500 text-[10px] font-bold uppercase tracking-widest group-hover:translate-x-2 transition-transform">Explore &rarr;</p>
+                        ${item.price > 0 ? `<p class="text-xl md:text-2xl font-bold text-white font-serif">R ${item.price.toFixed(2)}</p>` : `<p class="text-xs md:text-sm font-bold text-blue-400 uppercase tracking-widest">Variable</p>`}
+                        <p class="text-blue-500 text-[9px] md:text-[10px] font-bold uppercase tracking-widest group-hover:translate-x-2 transition-transform">Explore &rarr;</p>
                     </div>
                 </div>
             `).join('');
         } catch (error) {
             console.warn("Backend Unreachable for Menu. Using Fallback.");
-            // Logic handled by initializing with fallbackData
             menuContainer.innerHTML = fallbackData.map(item => `
-                <div class="glass p-8 rounded-lg group hover:border-blue-500/50 transition-all relative flex flex-col h-full">
-                    <h3 class="text-xl font-bold mb-4 uppercase tracking-tighter">${item.name}</h3>
-                    <p class="text-gray-400 text-sm mb-6 leading-relaxed">${item.description || 'A signature Zen 63 experience.'}</p>
+                <div class="glass p-6 md:p-8 rounded-lg group hover:border-blue-500/50 transition-all relative flex flex-col h-full text-left">
+                    <h3 class="text-lg md:text-xl font-bold mb-3 md:mb-4 uppercase tracking-tighter">${item.name}</h3>
+                    <p class="text-gray-400 text-xs md:text-sm mb-6 leading-relaxed">${item.description || 'A signature Zen 63 experience.'}</p>
                     <div class="mt-auto flex justify-between items-end border-t border-white/10 pt-4">
-                        ${item.price > 0 ? `<p class="text-2xl font-bold text-white font-serif">R ${item.price.toFixed(2)}</p>` : `<p class="text-sm font-bold text-blue-400 uppercase tracking-widest">Variable</p>`}
-                        <p class="text-blue-500 text-[10px] font-bold uppercase tracking-widest group-hover:translate-x-2 transition-transform">Explore &rarr;</p>
+                        ${item.price > 0 ? `<p class="text-xl md:text-2xl font-bold text-white font-serif">R ${item.price.toFixed(2)}</p>` : `<p class="text-xs md:text-sm font-bold text-blue-400 uppercase tracking-widest">Variable</p>`}
+                        <p class="text-blue-500 text-[9px] md:text-[10px] font-bold uppercase tracking-widest group-hover:translate-x-2 transition-transform">Explore &rarr;</p>
                     </div>
                 </div>
             `).join('');
@@ -345,7 +408,7 @@
     // ==========================================
     const nav = document.getElementById('main-nav');
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 100) {
+        if (window.scrollY > 50) {
             nav.classList.add('bg-black/95', 'py-3');
             nav.classList.remove('py-4', 'glass');
         } else {
