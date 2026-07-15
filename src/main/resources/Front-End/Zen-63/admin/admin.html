@@ -360,6 +360,7 @@
 <script>
     // Global Context
     const id = '11111111-1111-1111-1111-111111111111'; // Simulated JWT Tenant Extracted Value
+    let orderData;
 
     const mockCatalogItems = [
         { id: '1', name: 'Famous Zen Wings', category: 'food', price: 85.00, isAvailable: true },
@@ -694,11 +695,12 @@
     async function fetchOrders() {
         try {
             const response = await fetch(`http://localhost:7070/api/private/orders/active?tenantId=${id}`, { headers: { 'Accept': 'application/json' } });
-            const data = response.ok ? await response.json() : mockOrders;
-            renderOrders(data);
+            orderData = response.ok ? await response.json() : mockOrders;
+            renderOrders(orderData);
         } catch (error) {
             console.log(error)
-            renderOrders(mockOrders);
+            orderData = mockOrders;
+            renderOrders(orderData);
         }
     }
 
@@ -749,7 +751,7 @@
 
     function serveOrder(orderId) {
         // Fallback simulate success
-        mockOrders = mockOrders.filter(o => o.id !== orderId);
+        orderData = orderData.filter(o => o.id !== orderId);
         showToast("Ticket marked as served!");
         fetchOrders();
     }
