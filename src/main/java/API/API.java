@@ -72,7 +72,8 @@ public class API {
         this.server.get("/api/private/dashboard/activity", APIHandler::getRecentAdminActivity);
         this.server.get("/api/private/orders/active", APIHandler::getActiveOrders);
         this.server.put("api/private/catalog/{id}/price", APIHandler::updateCatalogPrice);
-        this.server.put("/api/private/reservations/{id}/status", APIHandler::updateOrderStatus);
+        this.server.put("/api/private/reservations/{id}/status", APIHandler::updateReservationStatus);
+        this.server.put("/api/private/order/{id}/status", APIHandler::updateOrderStatus);
         this.server.delete("/api/private/bookings", APIHandler::cancelBooking);
 
     }

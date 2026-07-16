@@ -368,6 +368,7 @@
     // Global Context
     const id = '11111111-1111-1111-1111-111111111111';
     let orderData;
+    const orderStatuses = ['cancelled', 'open', 'kitchen', 'served', 'closed'];
 
     // --- Mobile Sidebar Logic ---
     function toggleSidebar() {
@@ -569,6 +570,28 @@
         }
     }
 
+    async function updateOrder(orderId, newStatus) {
+        try {
+            const response = await fetch(`http://localhost:7070/api/private/orders/${orderId}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
+
+            if (response.ok) {
+                showToast(`Ticket marked as ${newStatus}!`);
+                fetchOrders(); // Re-fetch to guarantee sync
+            } else { throw new Error("Server error"); }
+        } catch (error) {
+            // Fix: Actually update the local mock data instead of trying to delete it using a broken variable
+            const order = orderData.find(o => o.orderId === orderId);
+            if (order) order.status = newStatus;
+
+            showToast(`Local Fallback: Order moved to ${newStatus}!`);
+            renderOrders(orderData);
+        }
+    }
+
     function getElapsedTime(placedAtSeconds) {
         const now = Math.floor(Date.now() / 1000);
         const diff = now - placedAtSeconds;
@@ -700,7 +723,8 @@
             orderData = response.ok ? await response.json() : mockOrders;
             renderOrders(orderData);
         } catch (error) {
-            orderData = mockOrders; renderOrders(orderData);
+            orderData = mockOrders;
+            renderOrders(orderData);
         }
     }
 
@@ -722,6 +746,12 @@
             </li>`
                 ).join('');
 
+            // Calculate the next logical status safely
+            const currentIndex = orderStatuses.indexOf(order.status);
+            const nextStatus = currentIndex >= 0 && currentIndex < orderStatuses.length - 1
+                ? orderStatuses[currentIndex + 1]
+                : 'closed';
+
             grid.innerHTML += `
                 <div class="bg-[#121212] border border-white/10 rounded-xl overflow-hidden shadow-lg flex flex-col">
                     <div class="bg-blue-600/10 border-b border-blue-500/20 p-3 md:p-4 flex justify-between items-start">
@@ -739,8 +769,8 @@
                         </ul>
                     </div>
                     <div class="p-3 md:p-4 border-t border-white/5 bg-black/20">
-                        <button onclick="serveOrder('${order.orderId}')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 md:py-2.5 rounded text-[10px] md:text-xs uppercase tracking-[0.2em] transition-all shadow-lg shadow-blue-500/20">
-                            Mark Served
+                        <button onclick="updateOrder('${order.orderId}', '${nextStatus}')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 md:py-2.5 rounded text-[10px] md:text-xs uppercase tracking-[0.2em] transition-all shadow-lg shadow-blue-500/20">
+                             Move to ${nextStatus}
                         </button>
                     </div>
                 </div>
