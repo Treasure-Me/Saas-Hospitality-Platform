@@ -410,12 +410,25 @@ public class APIHandler {
         context.status(200).json(List.of());
     }
 
-    public static void updateOrderStatus(@NotNull Context context) {
+    public static void updateReservationStatus(@NotNull Context context) {
         String id = context.pathParam("id");
         StatusUpdateRequest req = context.bodyAsClass(StatusUpdateRequest.class);
 
         try {
             DatabaseEditor.updateReservationStatus(id, req.status);
+            context.status(200).json(Map.of("success", true, "message", "Status updated"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            context.status(500).json(Map.of("success", false, "message", "Failed to update status"));
+        }
+    }
+
+    public static void updateOrderStatus(@NotNull Context context) {
+        String id = context.pathParam("id");
+        StatusUpdateRequest req = context.bodyAsClass(StatusUpdateRequest.class);
+
+        try {
+            DatabaseEditor.updateOrderStatus(id, req.status);
             context.status(200).json(Map.of("success", true, "message", "Status updated"));
         } catch (SQLException e) {
             e.printStackTrace();
