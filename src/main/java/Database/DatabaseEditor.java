@@ -10,6 +10,8 @@ import java.util.*;
 
 public class DatabaseEditor {
 
+    static String[] orderStatuses = new String[]{"cancelled", "open", "kitchen", "served", "closed"};
+
     public static String addIntoReservations(String tenantId, String name, String email, String type, Timestamp bookingStart, String details) throws SQLException {
         String sweepSql = "DELETE FROM reservations WHERE status = 'pending' AND created_at < (CURRENT_TIMESTAMP - INTERVAL '15 minutes')";
         String insertSql = "INSERT INTO reservations (tenant_id, reservation_type, scheduled_for, status, details) VALUES (?::uuid, ?, ?, 'pending', ?::jsonb) RETURNING id";
@@ -453,6 +455,18 @@ public class DatabaseEditor {
 
             pstmt.setString(1, status);
             pstmt.setString(2, reservationId);
+            pstmt.executeUpdate();
+        }
+    }
+
+    public static void updateOrderStatus(String orderId, String status) throws SQLException{
+        String sql = "UPDATE orders SET status = ? WHERE id = ?::uuid";
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, orderStatuses[Arrays.asList(orderStatuses).indexOf(status)+1]);
+            pstmt.setString(2, orderId);
             pstmt.executeUpdate();
         }
     }
